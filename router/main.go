@@ -16,6 +16,7 @@ var (
 )
 
 func Dispatch(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "text/html;charset=utf8")
 
 	for router, callback := range routes {
 		if match(req.Method, req.URL.Path, router) {

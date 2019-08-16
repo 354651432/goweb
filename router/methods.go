@@ -35,3 +35,10 @@ func Patch(path string, callback http.HandlerFunc) {
 func Any(path string, callback http.HandlerFunc) {
 	AddRoute("any", path, callback)
 }
+
+func Redirect(path, redPath string) {
+	Any(path, func(res http.ResponseWriter, req *http.Request) {
+		res.Header().Set("Location", redPath)
+		res.WriteHeader(302)
+	})
+}

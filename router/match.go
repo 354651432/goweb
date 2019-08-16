@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	regexp2 "regexp"
 	"strings"
 )
@@ -15,20 +14,22 @@ func match(method, path, exp string) bool {
 	}
 
 	method1 := exp[0:idx]
-	if method != method1 {
+	if method1 != "any" && method != method1 {
 		return false
 	}
 
-	if !strings.Contains(exp[idx+1:], "/") {
-		return false
+	exp1 := exp[idx+1:]
+	if !strings.Contains(exp1, "/") {
+		exp1 = "/" + exp1
 	}
 
-	rules := strings.Split(exp[idx+1:], "/")
+	rules := strings.Split(exp1, "/")
 	pathSplit := strings.Split(path, "/")
 	lenPathSplit := len(pathSplit)
 	rulesLen := len(rules)
 
-	for id := 1; id < rulesLen; id++ {
+	id := 1
+	for ; id < rulesLen; id++ {
 		if id >= lenPathSplit {
 			return false
 		}
@@ -43,18 +44,16 @@ func match(method, path, exp string) bool {
 			continue
 		}
 
-		var name, regexp string
-		_, err := fmt.Sscanf(rule, "%v:%v", &name, &regexp)
-		if err != nil {
-
-		}
+		arr := strings.Split(rule, ":")
+		name := arr[0]
+		regexp := arr[1]
 
 		if matched, err := regexp2.Match(regexp, []byte(pathSplit[id])); matched && err == nil {
-			params[strings.Trim(rule, "@")] = pathSplit[id]
+			params[strings.Trim(name, "@")] = pathSplit[id]
 			continue
 		}
 		return false
 	}
 
-	return true
+	return id == lenPathSplit
 }
