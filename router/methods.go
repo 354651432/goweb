@@ -38,7 +38,6 @@ func Any(path string, callback http.HandlerFunc) {
 
 func Redirect(path, redPath string) {
 	Any(path, func(res http.ResponseWriter, req *http.Request) {
-		res.Header().Set("Location", redPath)
-		res.WriteHeader(302)
+		WriteRedirect(res, redPath)
 	})
 }

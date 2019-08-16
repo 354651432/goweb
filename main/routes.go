@@ -19,9 +19,28 @@ func registerRoutes() {
 		_, _ = io.WriteString(res, "<h1>go router code by dual@dr.h</h1?")
 	})
 
+	router.Get("/users", func(res http.ResponseWriter, req *http.Request) {
+		router.WriteJson(res, []interface{}{
+			map[string]interface{}{
+				"name": "dual",
+				"age":  20,
+				"id":   "1",
+			},
+			map[string]interface{}{
+				"name": "ddd",
+				"age":  20,
+				"id":   "2",
+			},
+		})
+	})
+
 	router.Get("/users/@id:[0-9]+", func(res http.ResponseWriter, req *http.Request) {
 		id := router.GetParams("id")
-		_, _ = io.WriteString(res, "<h1>users page and id is "+id+"</h1?")
+		router.WriteJson(res, map[string]interface{}{
+			"code":    200,
+			"user_id": id,
+			"message": "user detail page",
+		})
 	})
 
 	router.Get("/users/create", func(res http.ResponseWriter, req *http.Request) {
