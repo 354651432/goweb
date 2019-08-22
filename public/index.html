@@ -5,10 +5,19 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
         <title>Document</title>
     </head>
     <body>
-        <h1>go web </h1>
-        <h2>version 1.0</h2>
+        <div class="container">
+            <h1>go web </h1>
+            <h4>version 1.0</h4>
+        </div>
+        <script src="/js/axios.min.js"></script>
+        <script>
+            axios.get("/users").then(p => {
+                console.log(p.data);
+            })
+        </script>
     </body>
 </html>
