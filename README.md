@@ -59,7 +59,7 @@ func registerRoutes() {
 
 
 ## functions have not been achieved
-0. read config file
-0. mysql support
+0. read config file - supported
+0. mysql support - supported
 0. static file proc
 0. view
