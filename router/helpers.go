@@ -30,3 +30,15 @@ func WriteRedirect(res http.ResponseWriter, url string) {
 	res.Header().Set("Location", url)
 	res.WriteHeader(302)
 }
+
+func QueryString(req *http.Request, key string, defValue string) string {
+	var querys = req.URL.Query()
+	var qs1, _ = querys[key]
+	if qs1 != nil {
+		if len(qs1) > 0 {
+			return qs1[0]
+		}
+	}
+
+	return defValue
+}

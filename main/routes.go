@@ -24,7 +24,8 @@ func registerRoutes() {
 
 	router.Get("/users", func(res http.ResponseWriter, req *http.Request) {
 		var users []models.User
-		models.Open().Limit(20).Find(&users)
+		var offset = router.QueryString(req, "offset", "0")
+		models.Open().Offset(offset).Limit(20).Find(&users)
 		router.WriteJson(res, users)
 	})
 
