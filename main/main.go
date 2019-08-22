@@ -10,6 +10,10 @@ import (
 
 func main() {
 
+	if router.Task() {
+		return
+	}
+
 	registerRoutes()
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	log.Println("service begin")
