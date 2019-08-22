@@ -4,7 +4,6 @@ import (
 	"app1/models"
 	"app1/router"
 	"github.com/jinzhu/configor"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 	"net/http"
 )

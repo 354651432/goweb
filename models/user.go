@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 )
 
@@ -19,15 +20,21 @@ func (_ *User) TableName() string {
 	return "hz_user"
 }
 
-var mysqlDns = ""
+var (
+	mysqlDns = ""
+	db       *gorm.DB
+)
 
 func SetDsn(dns string) {
 	mysqlDns = dns
 }
 
 func Open() *gorm.DB {
+	if db != nil {
+		return db
+	}
+
 	var err error
-	var db *gorm.DB
 	db, err = gorm.Open("mysql", mysqlDns)
 	if err != nil {
 		log.Println(err)
