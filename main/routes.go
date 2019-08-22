@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app1/models"
 	"app1/router"
 	"fmt"
 	"net/http"
@@ -22,28 +23,17 @@ func registerRoutes() {
 	})
 
 	router.Get("/users", func(res http.ResponseWriter, req *http.Request) {
-		router.WriteJson(res, []interface{}{
-			map[string]interface{}{
-				"name": "dual",
-				"age":  20,
-				"id":   "1",
-			},
-			map[string]interface{}{
-				"name": "ddd",
-				"age":  20,
-				"id":   "2",
-			},
-		})
+		var users []models.User
+		models.Open().Limit(20).Find(&users)
+		router.WriteJson(res, users)
 	})
 
 	// access /users/2
 	router.Get("/users/@id:[0-9]+", func(res http.ResponseWriter, req *http.Request) {
 		id := router.GetParams("id")
-		router.WriteJson(res, map[string]interface{}{
-			"code":    200,
-			"user_id": id,
-			"message": "user detail page",
-		})
+		var user models.User
+		models.Open().First(&user, id)
+		router.WriteJson(res, user)
 	})
 
 	// access /users/create

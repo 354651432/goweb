@@ -1,8 +1,10 @@
 package main
 
 import (
+	"app1/models"
 	"app1/router"
 	"github.com/jinzhu/configor"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 	"net/http"
 )
@@ -20,6 +22,7 @@ func main() {
 		return
 	}
 
+	models.SetDsn(config.DB.Dsn)
 	log.Println("server listened at " + config.Server.Listen)
 	err = http.ListenAndServe(config.Server.Listen, http.HandlerFunc(router.Dispatch))
 	if err != nil {

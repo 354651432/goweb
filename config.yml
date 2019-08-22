@@ -1,2 +1,4 @@
 server:
   listen: 127.0.0.1:2000
+db:
+  dsn: root:123@tcp(127.0.0.1:3306)/test
