@@ -3,8 +3,11 @@ package router
 import (
 	"io"
 	"io/ioutil"
+	"log"
 	mime2 "mime"
 	"net/http"
+	"os"
+	path2 "path"
 	"path/filepath"
 )
 
@@ -13,9 +16,14 @@ var (
 	params           = make(map[string]string)
 	notFoundCallback http.HandlerFunc
 	notFoundPage     string
+	publicPath       = "public"
+	index            = "index.html"
 )
 
 func Dispatch(res http.ResponseWriter, req *http.Request) {
+	if staticProc(res, req) {
+		return
+	}
 	res.Header().Set("Content-Type", "text/html;charset=utf8")
 
 	for router, callback := range routes {
@@ -29,6 +37,32 @@ func Dispatch(res http.ResponseWriter, req *http.Request) {
 		notFoundCallback = defaultNotFound
 	}
 	notFoundCallback(res, req)
+}
+
+func staticProc(res http.ResponseWriter, req *http.Request) bool {
+	var path = path2.Join(publicPath, req.URL.Path)
+	stat, _ := os.Stat(path)
+
+	if stat == nil {
+		return false
+	}
+
+	if stat.IsDir() {
+		path = path2.Join(path, index)
+		stat, _ = os.Stat(path)
+		if stat == nil {
+			return false
+		}
+	}
+	var mime = mime2.TypeByExtension(filepath.Ext(path))
+	res.Header().Set("Content-Type", mime)
+
+	var content, _ = ioutil.ReadFile(path)
+	_, err := res.Write(content)
+	if err != nil {
+		log.Println(err)
+	}
+	return true
 }
 
 func defaultNotFound(res http.ResponseWriter, req *http.Request) {
@@ -68,4 +102,12 @@ func HasParams(key string) bool {
 		return true
 	}
 	return false
+}
+
+func SetPublicPath(path string) {
+	publicPath = path
+}
+
+func SetIndex(indexStr string) {
+	index = indexStr
 }
