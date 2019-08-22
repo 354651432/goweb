@@ -64,3 +64,4 @@ func registerRoutes() {
 0. static file proc - supported
 0. view
 0. router like nginx
+0. artisan support - supported
